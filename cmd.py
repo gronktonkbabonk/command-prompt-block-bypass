@@ -20,8 +20,13 @@ Copyright (c) 2009 Microsoft Corporation. All rights reserved.
 os.system(f"title {os.getcwd()}")
 
 while True:
-    #get input
-    command=input(f"{os.getcwd()}>")
+    #detect if user tries to exit out with ctrl+C
+    try:
+        command=input(f"{os.getcwd()}>")
+    except KeyboardInterrupt:
+        print("")
+        continue
+    
     #cd handling since it doesn't work out the box
     if command[:2] == "cd" and len(command) > 2:
         try:
