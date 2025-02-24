@@ -12,9 +12,9 @@ HOMEM = os.path.join(ROOT_DIR,"homemade")
 
 for file in os.listdir(HOMEM):
     f = os.path.splitext(file)[-1].lower()
-    if f != ".py" and f != ".exe":
+    if f != ".py":
         
-        print("Invalid files in homemade folder. only .py and .exe files are currently supported.\n")
+        print("Invalid files in homemade folder. only .py files are currently supported.\n")
         while True:
             os.system("color 4")
             time.sleep(0.5)
@@ -37,40 +37,39 @@ while True:
     #detect if user tries to exit out with ctrl+C
     try:
         command=input(f"\n{os.getcwd()}>")
-        print("")
+    
+        #cd handling since it doesn't work out the box
+        if command[:2] == "cd" and len(command) > 2:
+            try:
+                os.chdir(command[3:])
+                #change title to cwd
+                os.system(f"title {os.getcwd()}")
+                #create newline for visual clarity
+            #handle bad paths
+            except:
+                print(f"Path: {os.getcwd()}\\{command[3:]} Does not exist.\n")
+                pass
+        else:
+            #run command
+            run = os.system(f"{command} 2> nul")
+            if run != 0:
+                
+                splitCommand = command.split(" ", 1)
+                orgCommand = splitCommand[0]
+                orgArgs = ""
+                if len(splitCommand) == 2:
+                    orgArgs = splitCommand[1]
+                
+                found = False
+                for file in os.listdir(HOMEM):
+                    f = os.path.splitext(file)[0].lower()
+                    if (f==orgCommand):
+                        found = True
+                        break
+                if found:
+                    os.system(f"py {HOMEM}/{orgCommand}.py {orgArgs}")
+                else:
+                    os.system(command)
     except KeyboardInterrupt:
         print("")
         continue
-    
-    #cd handling since it doesn't work out the box
-    if command[:2] == "cd" and len(command) > 2:
-        try:
-            os.chdir(command[3:])
-            #change title to cwd
-            os.system(f"title {os.getcwd()}")
-            #create newline for visual clarity
-        #handle bad paths
-        except:
-            print(f"Path: {os.getcwd()}\\{command[3:]} Does not exist.\n")
-            pass
-    else:
-        #run command
-        run = os.system(f"{command} 2> nul")
-        if run != 0:
-            
-            splitCommand = command.split(" ", 1)
-            orgCommand = splitCommand[0]
-            orgArgs = ""
-            if len(splitCommand) == 2:
-                orgArgs = splitCommand[1]
-            
-            found = False
-            for file in os.listdir(HOMEM):
-                f = os.path.splitext(file)[0].lower()
-                if (f==orgCommand):
-                    found = True
-                    break
-            if found:
-                os.system(f"py {HOMEM}/{orgCommand}.py {orgArgs}")
-            else:
-                os.system(command)
