@@ -12,9 +12,9 @@ HOMEM = os.path.join(ROOT_DIR,"homemade")
 
 for file in os.listdir(HOMEM):
     f = os.path.splitext(file)[-1].lower()
-    if f != ".py":
+    if f != ".py" and f != ".bat":
         
-        print("Invalid files in homemade folder. only .py files are currently supported.\n")
+        print("Invalid files in homemade folder. only .py and .bat files are currently supported.\n")
         while True:
             os.system("color 4")
             time.sleep(0.5)
@@ -61,13 +61,18 @@ while True:
                     orgArgs = splitCommand[1]
                 
                 found = False
+                suffix = ""
                 for file in os.listdir(HOMEM):
-                    f = os.path.splitext(file)[0].lower()
+                    f,suff = os.path.splitext(file)
+                    f=f.lower()
+                    suff=suff.lower()
                     if (f==orgCommand):
                         found = True
                         break
-                if found:
+                if found and suff == ".py":
                     os.system(f"py {HOMEM}/{orgCommand}.py {orgArgs}")
+                elif found and suff == ".bat":
+                    os.system(f"{HOMEM}/{orgCommand} {orgArgs}")
                 else:
                     os.system(command)
     except KeyboardInterrupt:
